@@ -41,22 +41,23 @@ var Acl = {
 	 * @param {Object} failure Callback object containing function (& scope); will be called upon error
 	 */
 	authenticateUserWithCloud: function(username, password, type, success, failure) {
-        var Cloud = require('RebelFrame/Cloud');
+    var Cloud = require('RebelFrame/Cloud');
 
 		return new Cloud({
-			url: '/oauth/access_token',
+			url: 'https://test-api.awakenings.com/v1/login/email/',
 			method: 'POST',
 			data: {
 				username: username,
 				password: password,
-				include_entities: true,
-				user_type: type,
-				grant_type: 'client_credentials'
+        client_id: Alloy.CFG.api.client_id,
+        client_secret: Alloy.CFG.api.client_secret,
+        scope: 'niet nodig maar wel voor nu',
+				grant_type: type
 			},
 			success: function(response) {
-				Ti.API.info('Saving Access Token', 'acl');
-				Ti.API.info(response);
-				Acl.setCloudAccessToken(response.access_token.access_token);
+				// Ti.API.info('Saving Access Token', 'acl');
+				// Ti.API.info(response);
+				Acl.setCloudAccessToken(response.access_token);
 				success(response);
 			},
 			error: failure
@@ -241,7 +242,7 @@ var Acl = {
 	 */
 	connectSocialMediaToUser: function(userData, callback) {
 		var Cloud = require('RebelFrame/Cloud');
-  
+
         return new Cloud({
 			url: '/user/' + Acl.getLoggedinUser().id + '/connect',
 			method: 'POST',
