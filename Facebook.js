@@ -76,6 +76,8 @@ var FB = {
 
 function _authorize(options) {
 	var callbackWrapper = function(evt) {
+		console.log('callback');
+
 		fbSDK.removeEventListener('login', callbackWrapper);
 
 		// Add network to event object
@@ -105,17 +107,10 @@ function _authorize(options) {
 	};
 
 	fbSDK.addEventListener('login', callbackWrapper);
-	fbSDK.appid = FB.appId;
 
-	if (OS_IOS)
-		fbSDK.permissions = FB.permissions.read;
-	else
-		fbSDK.permissions = _.extend(FB.permissions.read, FB.permissions.write);
+	fbSDK.permissions = FB.permissions.read;
 
-	fbSDK.forceDialogAuth = false;
-
-	if (OS_IOS)
-		fbSDK.initialize();
+	fbSDK.initialize();
 
 	// If user is loggedin to Facebook, log him/her out first
 	if (fbSDK.loggedIn) {
