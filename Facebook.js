@@ -105,17 +105,10 @@ function _authorize(options) {
 	};
 
 	fbSDK.addEventListener('login', callbackWrapper);
-	fbSDK.appid = FB.appId;
 
-	if (OS_IOS)
-		fbSDK.permissions = FB.permissions.read;
-	else
-		fbSDK.permissions = _.extend(FB.permissions.read, FB.permissions.write);
+	fbSDK.permissions = FB.permissions.read;
 
-	fbSDK.forceDialogAuth = false;
-
-	if (OS_IOS)
-		fbSDK.initialize();
+	fbSDK.initialize();
 
 	// If user is loggedin to Facebook, log him/her out first
 	if (fbSDK.loggedIn) {
@@ -124,6 +117,8 @@ function _authorize(options) {
 		callbackWrapper({success: true});
 
 	} else {
+		// fix for facbeook login on device, logout first before authorizing
+		fbSDK.logout();
 		fbSDK.authorize();
 	}
 }
