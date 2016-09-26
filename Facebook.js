@@ -76,6 +76,8 @@ var FB = {
 
 function _authorize(options) {
 	var callbackWrapper = function(evt) {
+		console.log('callback');
+
 		fbSDK.removeEventListener('login', callbackWrapper);
 
 		// Add network to event object
@@ -117,8 +119,6 @@ function _authorize(options) {
 		callbackWrapper({success: true});
 
 	} else {
-		// fix for facbeook login on device, logout first before authorizing
-		fbSDK.logout();
 		fbSDK.authorize();
 	}
 }
